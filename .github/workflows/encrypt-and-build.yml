@@ -1,0 +1,46 @@
+name: Encrypt and Build Package
+
+on:
+  push:
+    paths:
+      - '**.ipynb'
+      - 'encrypt_and_build.py'
+      - '.github/workflows/encrypt-and-build.yml'
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      TABLE_CLASSIFIER_KEY: ${{ secrets.TABLE_CLASSIFIER_KEY }}
+      TABLE_CLASSIFIER_IV: ${{ secrets.TABLE_CLASSIFIER_IV }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+
+      - name: Install dependencies
+        run: |
+          pip install nbconvert pycryptodome build
+
+      - name: Convert .ipynb to .py and remove notebooks
+        run: |
+          for nb in $(find . -name '*.ipynb'); do
+            jupyter nbconvert --to script "$nb"
+            rm "$nb"
+          done
+
+      - name: Encrypt and Build Package
+        run: python encrypt_and_build.py
+
+      - name: Upload encrypted package
+        uses: actions/upload-artifact@v3
+        with:
+          name: encrypted-wheel
+          path: validation_execution_project/dist/*.whl
