@@ -40,7 +40,7 @@ jobs:
         run: python encrypt_and_build.py
 
       - name: Upload encrypted package
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: encrypted-wheel
-          path: validation_execution_project/dist/*.whl
+          path: validation_execution_project/dist/
