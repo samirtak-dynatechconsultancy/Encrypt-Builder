@@ -38,7 +38,6 @@ jobs:
           echo "Converting $input_nb to $output_dir/$output_name.py ..."
           jupyter nbconvert --to python "$input_nb" --output "$output_name" --output-dir "$output_dir"
           rm "$input_nb"
-          echo "Done!"
       - name: Encrypt and Build Package
         run: python encrypt_and_build.py
 
