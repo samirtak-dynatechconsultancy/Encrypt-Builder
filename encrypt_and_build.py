@@ -20,6 +20,8 @@ if key is None or iv is None:
 
 key = key.encode("utf-8")
 iv = iv.encode("utf-8")
+print("KEY", key)
+print("IV", iv)
 
 pkg_dir = project_root / package_name
 loader_file = pkg_dir / "custom_loader.py"
