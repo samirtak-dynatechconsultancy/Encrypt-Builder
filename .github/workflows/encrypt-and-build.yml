@@ -29,9 +29,10 @@ jobs:
         run: |
           pip install nbconvert pycryptodome build
 
-      - name: Convert .ipynb to .py and remove notebooks
+      - name: Convert notebooks to Python
         run: |
-          for nb in $(find . -name '*.ipynb'); do
+          find . -name '*.ipynb' -type f -size +0c | while read nb; do
+            echo "Converting $nb..."
             jupyter nbconvert --to script "$nb"
             rm "$nb"
           done
