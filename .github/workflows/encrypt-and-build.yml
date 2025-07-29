@@ -38,7 +38,7 @@ jobs:
           done
 
       - name: Encrypt and Build Package
-        run: python encrypt_and_build.py
+        run: python validation_execution_project/encrypt_and_build.py
 
       - name: Upload encrypted package
         uses: actions/upload-artifact@v4
