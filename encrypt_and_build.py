@@ -151,7 +151,27 @@ setup_file.write_text(setup_code)
 
 # --- 6. Build the wheel ---
 print("📦 Building wheel package...")
-subprocess.run(["python", "setup.py", "bdist_wheel"], cwd=project_root)
-
-print("\n✅ Done! Your encrypted wheel is ready in:")
-print(f"   {project_root / 'dist'}")
+try:
+    # Use modern build tool instead of deprecated setup.py bdist_wheel
+    result = subprocess.run(["python", "-m", "build"], cwd=project_root, 
+                          capture_output=True, text=True, check=True)
+    print("Build successful!")
+    print("stdout:", result.stdout)
+    if result.stderr:
+        print("stderr:", result.stderr)
+    
+    # Verify the dist directory and files were created
+    dist_dir = project_root / "dist"
+    if dist_dir.exists():
+        files = list(dist_dir.glob("*"))
+        print(f"✅ Created {len(files)} files in dist/:")
+        for file in files:
+            print(f"   - {file.name}")
+    else:
+        print("❌ ERROR: dist directory was not created!")
+        
+except subprocess.CalledProcessError as e:
+    print(f"❌ Build failed with return code {e.returncode}")
+    print(f"stdout: {e.stdout}")
+    print(f"stderr: {e.stderr}")
+    raise
