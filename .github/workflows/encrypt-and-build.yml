@@ -31,7 +31,7 @@ jobs:
 
       - name: Convert notebooks to Python
         run: |
-          find . -name '*.ipynb' -type f -size +0c | while read nb; do
+          find . -name '*.ipynb' -type f ! -size 0 | while read nb; do
             echo "Converting $nb..."
             jupyter nbconvert --to script "$nb"
             rm "$nb"
