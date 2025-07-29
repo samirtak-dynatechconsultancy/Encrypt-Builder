@@ -29,13 +29,15 @@ jobs:
         run: |
           pip install nbconvert pycryptodome build
 
-      - name: Convert notebooks to Python
+      - name: Convert notebook to Python into target subfolder
         run: |
-          find . -name '*.ipynb' -type f ! -size 0 | while read nb; do
-            echo "Converting $nb..."
-            jupyter nbconvert --to script "$nb"
-            rm "$nb"
-          done
+          input_nb="ge_validation_execution.ipynb"
+          output_name="ge_validation_execution"
+          output_dir="validation_execution_project/ge_validation_execution"
+      
+          echo "Converting $input_nb to $output_dir/$output_name.py ..."
+          jupyter nbconvert --to python "$input_nb" --output "$output_name" --output-dir "$output_dir"
+          rm "$input_nb"
 
       - name: Encrypt and Build Package
         run: python encrypt_and_build.py
